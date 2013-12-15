@@ -14,8 +14,13 @@
 'Timer UDT
 #include "include/timer.bi"
 
+'Config
+#include "include/conf.bi"
+
 'Hauptheader
 #include once "include/main.bi"
+
+
 
 'Unterprogramme
 #include "modeRadio.bas"
@@ -39,6 +44,8 @@ End
 Sub Main()
 	Dim retVal as String
 	
+	_Conf.ReadConf("./radio.conf")
+	
 	Print "Raspi WiFi Radio"
 	
 	'wiringPi und den Portexpander Initialisieren
@@ -47,13 +54,25 @@ Sub Main()
 		End
 	End If
 	
-	if pcf8574Setup (100, &h22) = -1 then
+	if pcf8574Setup (100, cint(_Conf.ReadValue("i2c","adresse","34"))) = -1 then
 		Print "PCD8574 Initalisierungsfehler!"
 		END
 	end if
 	
+	DigitalWrite(cint(_Conf.ReadValue("i2c","pin_bl", "7")) + 100, LOW)
+	DigitalWrite(cint(_Conf.ReadValue("i2c","pin_rw", "5")) + 100, LOW)
+	
 	'LCD Initialisieren
-	lcdHandle = lcdInit(4,20,4,104,106,100,101,102,103,0,0,0,0)
+	lcdHandle = lcdInit(4,20,4,cint(_Conf.ReadValue("i2c","pin_rs","4")) + 100,cint(_Conf.ReadValue("i2c","pin_strb","6")) + 100, _
+					cint(_Conf.ReadValue("i2c","pin_db4", "0")) + 100, _
+					cint(_Conf.ReadValue("i2c","pin_db5", "1")) + 100, _
+					cint(_Conf.ReadValue("i2c","pin_db6", "2")) + 100, _
+					cint(_Conf.ReadValue("i2c","pin_db7", "3")) + 100, 0, 0, 0, 0)
+	
+	lcdHome (lcdHandle)
+    lcdClear (lcdHandle)
+	lcdDisplay(lcdHandle, 1)
+
 	lcdCursor(lcdHandle, 0)
 	lcdCursorBlink(lcdHandle, 0)
 	

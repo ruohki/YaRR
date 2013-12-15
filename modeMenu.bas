@@ -40,14 +40,14 @@ Dim Shared MenuInputTimer as udtTimer
 Sub Main_Menu()
 	Dim retVal as String
 	'Interrupts Setzen
-	setupencoder(1,2,@Menu_Encoder_Rotate)
+	setupencoder(cint(_Conf.ReadValue("Encoder","PinLeft","1")),cint(_Conf.ReadValue("Encoder","PinRight","2")),@Menu_Encoder_Rotate)
 	
 	'Button des Encoders Belegen
-	wiringPiISR(0,INT_EDGE_FALLING, @Menu_Encoder_Pressed)
+	wiringPiISR(cint(_Conf.ReadValue("Encoder","PinPush","0")),INT_EDGE_FALLING, @Menu_Encoder_Pressed)
 
-	wiringPiISR(5,INT_EDGE_FALLING, @Dummy_Sub)
-	wiringPiISR(3,INT_EDGE_FALLING, @Dummy_Sub)
-	wiringPiISR(4,INT_EDGE_FALLING, @Dummy_Sub)
+	wiringPiISR(cint(_Conf.ReadValue("Button","Button1","5")),INT_EDGE_FALLING, @Dummy_Sub)
+	wiringPiISR(cint(_Conf.ReadValue("Button","Button2","3")),INT_EDGE_FALLING, @Dummy_Sub)
+	wiringPiISR(cint(_Conf.ReadValue("Button","Button3","4")),INT_EDGE_FALLING, @Dummy_Sub)
 		
 	'Menu Füllen
 	FillMenu

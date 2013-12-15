@@ -43,6 +43,9 @@ Dim Shared _Volume_Changed as integer = false
 'LCD Handle
 Dim Shared lcdHandle as integer
 
+'Config
+Dim Shared _Conf as ConfigurationManager
+
 '---------------------------Deklarationen---------------------------
 'Subs
 Declare Sub Main_Radio()
